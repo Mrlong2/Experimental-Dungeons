@@ -4,7 +4,7 @@ import tcod
 def main():
     pass
 
-#Helloooooo
+#Hello
 
 
 if __name__ == '__main__':
