@@ -1,7 +1,7 @@
 import pygame
 import tcod
 import config
-
+import map1
 
 #   ___  _     _           _
 #  / _ \| |__ (_) ___  ___| |_ ___
@@ -10,8 +10,14 @@ import config
 #  \___/|_.__// |\___|\___|\__|___/
 #           |__/
 class tile:
+    '''Tiles, to be improved at a later date'''
+    def __init__(self, block_path):
+        self.block_path = block_path
+        #todo add a material type
+
+class prop:
     '''This object never gets ticked, and cannot act on it's own.  '''
-    pass
+    def __init__(self, x, y, name_object):
 
 class actor:
     '''This object includes people, creatures, animals, some traps, and machines'''
@@ -21,9 +27,8 @@ class actor:
 
     #subclasses
 
-    class physical:
+    class creature:
         pass
-
 
 
 #   ____ ___  __  __ ____   ___  _   _ _____ _   _ _____ ____
