@@ -1,7 +1,8 @@
 import pygame
 import tcod
-import config
+import constants
 import map1
+
 
 #   ___  _     _           _
 #  / _ \| |__ (_) ___  ___| |_ ___
@@ -11,24 +12,40 @@ import map1
 #           |__/
 class tile:
     '''Tiles, to be improved at a later date'''
+
     def __init__(self, block_path):
         self.block_path = block_path
-        #todo add a material type
+        # todo add a material type
+
 
 class prop:
     '''This object never gets ticked, and cannot act on it's own.  '''
+
     def __init__(self, x, y, name_object):
+        pass
+
+    def draw(self):
+        pass
+
 
 class actor:
-    '''This object includes people, creatures, animals, some traps, and machines'''
-    def __init__(self, x, y, name_o):
+
+    def __init__(self, x, y, nametype, sprite=None, health=None, inventory=None):
+
         self.x = x
         self.y = y
+        self.nametype = nametype
+        self.sprite = sprite
 
-    #subclasses
+        if health:
+            self.health = health
 
-    class creature:
-        pass
+        if inventory:
+            self.inventory = inventory
+
+    def draw(self):
+        SURFACE_MAIN.blit(self.sprite, (self.x * constants.CELL_WIDTH, (self.y * constants.CELL_HEIGHT)-constants.CELL_HEIGHT*1.2))
+    # subclasses
 
 
 #   ____ ___  __  __ ____   ___  _   _ _____ _   _ _____ ____
@@ -37,7 +54,25 @@ class actor:
 # | |__| |_| | |  | |  __/| |_| | |\  | |___| |\  | | |  ___) |
 #  \____\___/|_|  |_|_|    \___/|_| \_|_____|_| \_| |_| |____/
 
-# eh maybe
+
+class com_health:
+
+    def __init__(self, maxhp, currenthp=None):
+        self.maxhp = maxhp
+        if currenthp:
+            self.currenthp = currenthp
+        else:
+            self.currenthp = maxhp
+
+
+class com_inventory:
+    def __init__(self, items):
+        self.items = items
+
+
+class item:
+    def __init__(self, name):
+        self.name = name
 
 
 #    _    ___
@@ -46,6 +81,7 @@ class actor:
 #  / ___ \ | |
 # /_/   \_\___|
 
+# yeah eventually
 
 #  __  __
 # |  \/  | __ _ _ __
@@ -54,8 +90,10 @@ class actor:
 # |_|  |_|\__,_| .__/
 #              |_|
 
+
 def map_create():
-    pass
+    return map1.map_gen_1()
+
 
 #  ____                     _
 # |  _ \ _ __ __ ___      _(_)_ __   __ _
@@ -65,9 +103,30 @@ def map_create():
 #                                   |___/
 
 def draw_game():
-    pass
+    SURFACE_MAIN.fill(constants.COLOR_DEFAULT_BG)
 
-#also the camera
+    # draw the map
+    draw_map(MAP_TILES)
+
+    # draw the character
+    for obj in MAP_ACTORS:
+        obj.draw()
+
+    # update the display
+    pygame.display.flip()
+
+
+def draw_map(map_to_draw):
+    for x in range(0, constants.MAP_WIDTH):
+        for y in range(0, constants.MAP_HEIGHT):
+            if map_to_draw[x][y].block_path == True:
+                # draw wall
+                SURFACE_MAIN.blit(constants.S_WALL, (x * constants.CELL_WIDTH, y * constants.CELL_HEIGHT))
+            else:
+                SURFACE_MAIN.blit(constants.S_FLOOR, (x * constants.CELL_WIDTH, y * constants.CELL_HEIGHT))
+
+
+# also the camera
 
 #   ____
 #  / ___| __ _ _ __ ___   ___
@@ -81,24 +140,33 @@ def game_main_loop():
 
     # exit when click exit
     while not game_quit:
-        #player
+        # player
 
+        # get inputs
+        inputs_list = pygame.event.get()
+        for event in inputs_list:
+            if event.type == pygame.QUIT:
+                game_quit = True
 
-        #get inputs
-        get_inputs()
+        # process gameticks
+        for object in MAP_ACTORS:
+            pass
 
-        #process gameticks
+        draw_game()
 
-        pass
 
 def game_initialize():
     pygame.init()
 
-    global SURFACE_MAIN, GAME_MAP, MAP_OBJECTS
+    global SURFACE_MAIN, MAP_ACTORS, MAP_PROPS, MAP_TILES, TEAM_TURN
 
-    SURFACE_MAIN = pygame.display.set_mode((config.GAME_HEIGHT, config.GAME_WIDTH))
+    SURFACE_MAIN = pygame.display.set_mode((constants.GAME_WIDTH, constants.GAME_HEIGHT))
 
-    GAME_MAP = map_create()
+    MAP_TILES = map_create()
+
+    MAP_ACTORS = [actor(2, 2, "human adventurer", sprite=constants.S_GIRL, health=com_health(10), inventory=com_inventory(item("sword")))]
+
+
 
 
 def get_inputs():
@@ -108,6 +176,7 @@ def get_inputs():
     for event in events_list:
         if event.type == pygame.QUIT:
             return
+
 
 #############################################################
 ###################################################   #######
