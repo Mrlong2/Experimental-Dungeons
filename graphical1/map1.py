@@ -1,5 +1,4 @@
-import main
-import constants
+from graphical1 import main, constants
 
 
 def map_gen_1():

@@ -1,7 +1,5 @@
 import pygame
-import tcod
-import constants
-import map1
+from graphical1 import constants, map1
 
 
 #   ___  _     _           _
@@ -44,7 +42,7 @@ class actor:
             self.inventory = inventory
 
     def draw(self):
-        SURFACE_MAIN.blit(self.sprite, (self.x * constants.CELL_WIDTH, (self.y * constants.CELL_HEIGHT)-constants.CELL_HEIGHT*1.2))
+        SURFACE_MAIN.blit(self.sprite, (self.x * constants.CELL_WIDTH, (self.y * constants.CELL_HEIGHT) - constants.CELL_HEIGHT * 1.2))
     # subclasses
 
 

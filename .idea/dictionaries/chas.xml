@@ -2,8 +2,10 @@
   <dictionary name="chas">
     <words>
       <w>currenthp</w>
+      <w>gameobject</w>
       <w>maxhp</w>
       <w>nametype</w>
+      <w>objtype</w>
     </words>
   </dictionary>
 </component>
