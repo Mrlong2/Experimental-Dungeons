@@ -1,11 +1,15 @@
 <component name="ProjectDictionaryState">
   <dictionary name="chas">
     <words>
+      <w>blockpath</w>
       <w>currenthp</w>
+      <w>drawself</w>
       <w>gameobject</w>
       <w>maxhp</w>
       <w>nametype</w>
       <w>objtype</w>
+      <w>spriteoffsetx</w>
+      <w>spriteoffsety</w>
     </words>
   </dictionary>
 </component>
