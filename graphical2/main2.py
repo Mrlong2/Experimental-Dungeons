@@ -37,8 +37,8 @@ def get_inputs():
 
 # actors
 # game objects need x, y, type, health, inventory,
-class gameobject:
-    def __init__(self, x, y, objtype, sprite=None, blockpath=False):
+class obj_entity:
+    def __init__(self, x, y, objtype, sprite, blockpath=False, health=None, inventory=None):
         # moving and location
         self.x = x
         self.y = y
@@ -47,37 +47,60 @@ class gameobject:
 
         # object type
         self.type = objtype
-        self.sprite = sprite
         self.blockpath = blockpath
 
+        # Question: what the heck is up with that retarded "self.owner" stuff?
+        # Answer: it's a workaround, python doesn't have a proper "parent" reference.  We need to get stuff from other
+        # components, so that's the work around.
 
-# components
-#handles health and dying
-class heath:
-    pass
+        # sprite and drawing
+        self.sprite = sprite
+        if self.sprite:
+            self.sprite.owner = self
+
+        # health
+        self.health = health
+        if self.health:
+            self.health.owner = self
+
+        # inventory
+        self.inventory = inventory
+        if self.inventory:
+            self.inventory.owner = self
 
 
-#inspection text, lore, ect.
-class inspect:
-    pass
+#### OBJECT COMPONENTS ####
+
+# controls an object's health
+class com_health:
+    def __init__(self):
+        self.owner = None
 
 
-#controls drawing a sprite
-class sprite:
-    def __init__(self, sprite=None, spriteoffsetx=0, spriteoffsety=0):
-        self.img = sprite
+# controls drawing and stuff
+class com_sprite:
+    def __init__(self, img, spriteoffsetx=0, spriteoffsety=0):
+        self.img = img
         self.spriteoffsetx = spriteoffsetx
         self.spriteoffsety = spriteoffsety
+        self.owner = None
 
     def drawself(self, surf):
-        # I LITERALLY SPENT HOURS DEBUGGING THIS WHY CANT I USE SURFACE MAIN, WHY CANT I USE IT?!!?!?!?!?
-        surf.blit(self.sprite, (
-            (super(gameobject).x * config.CELL_WIDTH) + self.spriteoffsetx, (super(self).y * config.CELL_HEIGHT) + self.spriteoffsety))
+        surf.blit(self.img, (
+            (self.owner.x * config.CELL_WIDTH) + self.spriteoffsetx,
+            (self.owner.y * config.CELL_HEIGHT) + self.spriteoffsety))
 
 
-#controls an object's inventory
-class inventory:
-    pass
+# things have inventories
+class com_inventory:
+    def __init__(self):
+        self.owner = None
+
+
+# some objects can be picked up and used as weapons.
+class com_item:
+    def __init__(self):
+        self.owner = None
 
 
 ###############################################################################################################
@@ -86,17 +109,30 @@ class inventory:
 
 
 # functions for stuff
-def query_blocked(x, y, a=True, p=True):
+def query_object(x, y, actors=True, props=True):
+    found = []
+    for obj in ACTORS:
+        if (obj.x == x) and (obj.y == y):
+            found += obj
+
+    for obj in PROPS:
+        if (obj.x == x) and (obj.y == y):
+            found += obj
+
+    return found
+
+
+def query_blocked(x, y, actors=True, props=True):
     # set block to false
     block = False
     # The object must be BOTH at the same x and y values, AND be blocking
     # break out because multiple blocks is redundant.
-    for act in ACTORS:
-        if ((act.x == x) and (act.y == y)) and (act.blockpath == True):
+    for obj in ACTORS:
+        if ((obj.x == x) and (obj.y == y)) and (obj.blockpath == True):
             block = True
             break
-    for act in PROPS:
-        if ((act.x == x) and (act.y == y)) and (act.blockpath == True):
+    for obj in PROPS:
+        if ((obj.x == x) and (obj.y == y)) and (obj.blockpath == True):
             block = True
             break
     return block
@@ -175,7 +211,7 @@ def game_initialize():
     RUN_GAME = True
     # set the screen
     SURFACE_MAIN = pygame.display.set_mode((800, 600))
-    ACTORS, PROPS, SELECTED = map1gen.map_1_generate(20, 6)
+    ACTORS, PROPS, SELECTED = map1gen.map_1_generate(25, 6)
     # set a font i guess.  wow there's a lot of globals even though someone told me globals are bad
     FONTS = {"fps": pygame.font.SysFont("Arial", 80)}
     TIMESINCE = "0.0"
