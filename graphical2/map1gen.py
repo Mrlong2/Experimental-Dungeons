@@ -1,5 +1,5 @@
 import pygame
-from graphical2.main2 import obj_entity, com_sprite, com_health, com_ondeath, com_attack
+from graphical2.main2 import obj_entity, com_sprite, com_health, com_ondeath, com_attack, com_special
 from graphical2 import config
 
 
@@ -12,11 +12,14 @@ def map_1_generate(width, height):
     actors += [obj_entity(1, 1, "Adventurer", sprite=com_sprite(config.S_HUMAN, spriteoffsetx=0, spriteoffsety=-1),
                           blockpath=True, health=com_health(20), attack=com_attack(1))]
     selected = actors[0]
-    actors += [obj_entity(3, 1, "Crabby the Crab", sprite=com_sprite(config.S_CRAB, spriteoffsetx=0, spriteoffsety=0),
-                          blockpath=True, ondeath=com_ondeath(config.S_CRAB_DIE), health=com_health(5))]
+    actors += [obj_entity(1, 3, "Crabby the Crab", sprite=com_sprite(config.S_CRAB, spriteoffsetx=0, spriteoffsety=0),
+                          blockpath=True, ai_persona='random', ondeath=com_ondeath(config.S_CRAB_DIE), health=com_health(5))]
 
-    actors += [obj_entity(3, 3, "Pipi the Skaven", sprite=com_sprite(config.S_SKAVEN, spriteoffsetx=0, spriteoffsety=-1),
-                          blockpath=True, ondeath=com_ondeath(config.S_SKAVEN_DIE), health=com_health(25))]
+    actors += [obj_entity(3, 3, "Pipi the Skaven", sprite=com_sprite(config.S_SKAVEN, spriteoffsetx=0,
+                                                                     spriteoffsety=-1),
+                          blockpath=True, ondeath=com_ondeath(config.S_SKAVEN_DIE), health=com_health(10),
+                          ai_persona='dumb_attack', attack=com_attack(1))]
+    actors += [obj_entity(4, 4, "Trapdoor", sprite=com_sprite(config.S_TRAPDOOR, layering=3), blockpath=False, special=({'level down': True}))]
 
     #make a floor
     for y in range(1, height - 1):

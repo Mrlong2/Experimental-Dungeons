@@ -1,11 +1,14 @@
 import pygame
 CELL_WIDTH = 64
 CELL_HEIGHT = 64
+WAIT_TIME = 0.1
+MAP_1_GEN_SIZE = (10, 10)
 
 #Sprites
 S_WALL = pygame.transform.scale(pygame.image.load("images/wall2.png"), (CELL_WIDTH, CELL_HEIGHT))
 S_FLOOR = pygame.transform.scale(pygame.image.load("images/floor2.png"), (CELL_WIDTH, CELL_HEIGHT))
 S_SPARK = pygame.transform.scale(pygame.image.load("images/spark1.png"), (CELL_WIDTH//4, CELL_HEIGHT//4))
+S_TRAPDOOR = pygame.transform.scale(pygame.image.load("images/trapdoor.png"), (CELL_WIDTH, CELL_HEIGHT))
 
 #crab
 S_CRAB = pygame.transform.scale(pygame.image.load("images/crab.png"), (CELL_WIDTH, CELL_HEIGHT))

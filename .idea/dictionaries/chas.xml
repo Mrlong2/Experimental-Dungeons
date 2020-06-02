@@ -7,10 +7,12 @@
       <w>deathsprite</w>
       <w>drawself</w>
       <w>gameobject</w>
+      <w>gamestate</w>
       <w>maxhp</w>
       <w>nametype</w>
       <w>objtype</w>
       <w>ondeath</w>
+      <w>pathfinding</w>
       <w>skaven</w>
       <w>spriteoffsetx</w>
       <w>spriteoffsety</w>
